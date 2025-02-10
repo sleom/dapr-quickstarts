@@ -1,0 +1,26 @@
+services:
+  checkout:
+    image: ${DOCKER_REGISTRY-}checkout
+    build:
+      context: .
+      dockerfile: checkout/Dockerfile
+
+  order-processor:
+    image: ${DOCKER_REGISTRY-}orderprocessor
+    build:
+      context: .
+      dockerfile: order-processor/Dockerfile
+
+  checkout-dapr:
+    image: "daprio/daprd:${DAPR_VERSION}"
+    network_mode: "service:checkout"
+
+  order-processor-dapr:
+    image: "daprio/daprd:${DAPR_VERSION}"
+    network_mode: "service:order-processor"
+
+  # redis:
+  #   image: redis:alpine
+
+  # zipkin:
+  #   image: openzipkin/zipkin

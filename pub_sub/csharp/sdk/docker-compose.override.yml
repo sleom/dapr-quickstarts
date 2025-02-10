@@ -1,0 +1,33 @@
+
+services:
+  order-processor:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+
+  order-processor-dapr:
+    volumes:
+      - "./components/:/components"
+    command: ["./daprd",
+      "-app-id", "order-processor",
+      "-app-port", "8080",
+      "-components-path", "/components",
+      "-config", "/components/observability.yaml"
+      ]
+
+  checkout:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+
+  checkout-dapr:
+    volumes:
+       - "./components/:/components"
+    command: ["./daprd",
+      "-app-id", "checkout",
+      "-components-path", "/components",
+      "-config", "/components/observability.yaml"
+      ]
+
+  # zipkin:
+  #   ports:
+  #     - "5411:9411"
